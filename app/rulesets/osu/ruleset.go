@@ -450,7 +450,7 @@ func (set *OsuRuleSet) SendResult(time int64, cursor *graphics.Cursor, src HitOb
 		subSet.numObjects++
 	}
 
-	subSet.maxCombo = mutils.MaxI64(subSet.scoreProcessor.GetCombo(), subSet.maxCombo)
+	subSet.maxCombo = mutils.Max(subSet.scoreProcessor.GetCombo(), subSet.maxCombo)
 
 	if subSet.numObjects == 0 {
 		subSet.accuracy = 100
@@ -482,7 +482,7 @@ func (set *OsuRuleSet) SendResult(time int64, cursor *graphics.Cursor, src HitOb
 		subSet.grade = D
 	}
 
-	index := mutils.MaxI64(0, subSet.numObjects-1)
+	index := mutils.Max(0, subSet.numObjects-1)
 
 	diff := set.oppDiffs[subSet.player.diff.Mods&difficulty.DifficultyAdjustMask][index]
 

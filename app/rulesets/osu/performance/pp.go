@@ -42,7 +42,7 @@ type PPv2 struct {
 }
 
 func (pp *PPv2) PPv2x(attribs Attributes, combo, n300, n100, n50, nmiss int, diff *difficulty.Difficulty, experimental bool) PPv2 {
-	attribs.MaxCombo = mutils.MaxI(1, attribs.MaxCombo)
+	attribs.MaxCombo = mutils.Max(1, attribs.MaxCombo)
 
 	if combo < 0 {
 		combo = attribs.MaxCombo
@@ -75,7 +75,7 @@ func (pp *PPv2) PPv2x(attribs Attributes, combo, n300, n100, n50, nmiss int, dif
 			float64(n300)*300) /
 			(float64(totalhits) * 300)
 
-		pp.accuracy = mutils.ClampF64(acc, 0, 1)
+		pp.accuracy = mutils.ClampF(acc, 0, 1)
 	}
 
 	if diff.CheckModActive(difficulty.ScoreV2) {
@@ -97,7 +97,7 @@ func (pp *PPv2) PPv2x(attribs Attributes, combo, n300, n100, n50, nmiss int, dif
 	}
 
 	if diff.Mods.Active(difficulty.Relax) {
-		pp.effectiveMissCount = mutils.MinI(pp.effectiveMissCount+pp.countOk+pp.countMeh, pp.totalHits)
+		pp.effectiveMissCount = mutils.Min(pp.effectiveMissCount+pp.countOk+pp.countMeh, pp.totalHits)
 		finalMultiplier *= 0.6
 	}
 
@@ -161,7 +161,7 @@ func (pp *PPv2) computeAimValue() float64 {
 	estimateDifficultSliders := float64(pp.attribs.Sliders) * 0.15
 
 	if pp.attribs.Sliders > 0 {
-		estimateSliderEndsDropped := mutils.ClampF64(float64(mutils.MinI(pp.countOk+pp.countMeh+pp.countMiss, pp.attribs.MaxCombo-pp.scoreMaxCombo)), 0, estimateDifficultSliders)
+		estimateSliderEndsDropped := mutils.ClampF(float64(mutils.Min(pp.countOk+pp.countMeh+pp.countMiss, pp.attribs.MaxCombo-pp.scoreMaxCombo)), 0, estimateDifficultSliders)
 		sliderNerfFactor := (1-pp.attribs.SliderFactor)*math.Pow(1-estimateSliderEndsDropped/estimateDifficultSliders, 3) + pp.attribs.SliderFactor
 		aimValue *= sliderNerfFactor
 	}
@@ -312,5 +312,5 @@ func (pp *PPv2) calculateEffectiveMissCount() int {
 	// we're clamping misscount because since its derived from combo it can be higher than total hits and that breaks some calculations
 	comboBasedMissCount = math.Min(comboBasedMissCount, float64(pp.totalHits))
 
-	return mutils.MaxI(pp.countMiss, int(math.Floor(comboBasedMissCount)))
+	return mutils.Max(pp.countMiss, int(math.Floor(comboBasedMissCount)))
 }
