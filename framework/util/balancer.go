@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-func Balance[T any, B any](workers int, candidates []T, workerFunc func(a T) *B) []*B {
+func Balance[T, B any](workers int, candidates []T, workerFunc func(a T) *B) []*B {
 	results := make([]*B, 0, len(candidates))
 
 	channel := make(chan T, workers)
